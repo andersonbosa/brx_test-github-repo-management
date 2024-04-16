@@ -20,41 +20,25 @@
 
 ---
 
-
 ## About
 
-It is a repository that aims to be an example of good practices in the software organization, their documentation and auxiliary tools.
+A platform that allows users to easily research and manage Github repositories from users. You can search, visualize, export and import in CSV the repositories of a Github user.
 
-Here you also found a collection of some sample models for you to use in your projects. Among them are, for example:
-
-* Github templates
-* Github workflows
-  * Application security testing samples
-  * Github Pages deploys
-
-
-
-## Getting Started
+## Getting 
 
 * Checkout the [documentation](docs/getting-started.md)
 
-
 ## 🤝 Contribution
 
-<p>
-  This project is for study purposes too, so please send me a message telling me what you are doing and why you are doing it, teach me what you know. All kinds of contributions are very welcome and appreciated!
-</p>
-
-
+* Checkout the [contribution guidelines](CONTRIBUTING.md) to further details.
 
 ## 📝 License
 
-This project is under the [public domain](LICENSE.md) license.
-
+This project is under the [Public Domain](LICENSE.md) license.
 
 ---
 
 <h4>  
-  <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/andersonbosa/dothub?style=social">
+  <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/andersonbosa/brx_test-github-repo-management?style=social">
   | Did you like the repository? Give it a star! 😁
 </h4>
