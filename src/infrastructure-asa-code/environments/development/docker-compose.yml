@@ -1,0 +1,54 @@
+version: '3.8'
+
+
+services:
+  api:
+    build:
+      context: ./../../../api
+      dockerfile: Dockerfile.dev
+      args:
+        PORT: 3000
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./../../../api:/usr/src/app
+    networks:
+      - repohub-net
+
+  worker:
+    build:
+      context: ./../../../worker
+      dockerfile: Dockerfile.dev
+      args:
+        PORT: 3001
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "${PORT:-3001}:3001"
+    volumes:
+      - ./../../../worker:/usr/src/app
+    networks:
+      - repohub-net
+
+  app:
+    stdin_open: true
+    build:
+      context: ./../../../app
+      dockerfile: Dockerfile.dev
+      args:
+        PORT: 8080
+    volumes:
+      - ./../../../app:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "${PORT:-8080}:8080"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - repohub-net
+
+
+networks:
+  repohub-net:
