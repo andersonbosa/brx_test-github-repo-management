@@ -11,7 +11,6 @@
 
   <p>
     <a href="#about">About</a> •
-    <a href="#installation">Installation</a> •
     <a href="#getting-started">Getting Started</a> •
     <a href="#contribution">Contribution</a> •
     <a href="#license">License</a>
@@ -24,7 +23,7 @@
 
 A platform that allows users to easily research and manage Github repositories from users. You can search, visualize, export and import in CSV the repositories of a Github user.
 
-## Getting 
+## Getting Started
 
 * Checkout the [documentation](docs/getting-started.md)
 
