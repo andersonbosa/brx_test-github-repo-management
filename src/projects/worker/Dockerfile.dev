@@ -2,24 +2,24 @@
 FROM node:20.12.1-slim
 
 # Use the environment variable for the door
-ARG PORT=3000
+ARG PORT=3001
 
 # Exponha a porta configurável
 
 # Set the working directory inside the container
-WORKDIR /usr/src/app
+WORKDIR /home/node/app
 
-# Copy package.json and package-lock.json (if exists) to the working directory
+# Copying the necessary files
 COPY package*.json ./
 
-# Install dependencies (in production should use npm ci)
+# Installing dependencies
 RUN npm install
 
-# Copy the rest of the application code to the working directory
+# Copying the rest of the application files
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE ${PORT}
+# Building the application
+# RUN npm run build
 
 # Command to run the application
-CMD ["npm", "start"]
+CMD ["npm", "run", "devv"]
