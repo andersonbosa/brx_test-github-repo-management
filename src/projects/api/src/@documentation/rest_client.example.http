@@ -1,0 +1,28 @@
+### 200
+GET http://localhost:3000/api/v1/healthcheck
+
+### 401
+POST http://localhost:3000/api/v1/auth/sign-in
+Content-Type: application/json
+
+{ "username": "guest" }
+
+### 422
+POST http://localhost:3000/api/v1/auth/sign-in
+Content-Type: application/json
+
+{ "wroooooong": "payload" }
+
+### 200
+POST http://localhost:3000/api/v1/auth/sign-in
+Content-Type: application/json
+
+{ "username": "guest" }
+
+###
+POST http://localhost:3000/api/v1/auth/sign-out
+Authorization: Bearer <valid jwt>
+
+###
+POST http://localhost:3000/api/v1/auth/sign-out
+Authorization: Bearer <invalid jwt>

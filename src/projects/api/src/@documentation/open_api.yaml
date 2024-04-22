@@ -1,0 +1,70 @@
+openapi: '3.0.2'
+
+info:
+  version: "1.0.0"
+  title: "Backend Deployment API"
+  description: "Anim aute voluptate veniam aute adipisicing dolor dolore aliqua ipsum aliquip officia."
+  contact:
+    name: "Anderson Bosa"
+    email: "andersonbosa0@gmail.com"
+  license:
+    name: CC0 1.0. Public Domain.
+
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /api/v1/healthcheck:
+    get:
+      summary: Check the health of the API
+      responses:
+        '200':
+          description: OK
+
+  /api/v1/auth/sign-in:
+    post:
+      summary: Sign in to the API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+      responses:
+        '200':
+          description: OK
+
+  /api/v1/counter:
+    get:
+      summary: Get the number of successful requests
+      responses:
+        '200':
+          description: OK
+      security:
+        - BearerAuth: []
+
+    post:
+      summary: Increment the counter of successful requests
+      responses:
+        '200':
+          description: OK
+      security:
+        - BearerAuth: []
+
+  /api/v1/auth/sign-out:
+    post:
+      summary: Sign out from the API
+      responses:
+        '200':
+          description: OK
+      security:
+        - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer

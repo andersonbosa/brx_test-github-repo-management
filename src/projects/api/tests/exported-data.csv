@@ -1,0 +1,7 @@
+title,description,owner,stars
+clean-code-developer-checklist,"A developer checklist derived from the book Clean Code by Robert C Martin ",andersonbosa,5
+moshell.sh,Make your customizations and take them everywhere. moshell.sh is a framework to persist its customizations without complexity!,andersonbosa,5
+security-goat,Security-Goat is a command line client to perform Security Gate written in Go. It interacts with DependaBot alerts using GitHub GraphQL API.,andersonbosa,4
+droxy,"SOCKS5 server through SSH tunnel made easy. To enable a Docker Container to easily communicate with an application/target on another network without much effort. Droxy allows you to automate part of the effort, leaving you only to configure other applications to use SOCKS tunnels.",andersonbosa,3
+wayback.go,"Search inside by multiple targets within the ""wayback machine"" using Golang.Project done with educational purpose.",andersonbosa,3
+automocker.js,"Automocker.js was developed to make developers' lives easier! With this tool, you can fill in the input fields of your form with random values and thus speed up your tests. Don't waste any more time manually filling in your form inputs. Use Automocker.js and increase the agility and efficiency of your workflow.",andersonbosa,2

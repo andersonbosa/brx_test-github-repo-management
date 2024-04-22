@@ -1,0 +1,17 @@
+{
+  "ext": "ts",
+  "watch": [
+    "src"
+  ],
+  "verbose": true,
+  "ignore": [
+    "./**/*.json",
+    "./**/src/logs/**",
+    "./**/fixtures/**",
+    "./**/tests/**",
+    "./**/*.spec.ts"
+  ],
+  "env": {
+    
+  }
+}
