@@ -1,0 +1,16 @@
+###
+GET http://localhost:3000/api/v1/healthcheck
+
+
+### 200
+POST http://localhost:8080/api/data/import
+Content-Type: application/json
+
+{
+  "data": {
+    "1": [
+      "Clarence Simon",
+      "Tommy Peters"
+    ]
+  }
+}
