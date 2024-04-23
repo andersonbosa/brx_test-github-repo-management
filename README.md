@@ -1,6 +1,6 @@
 
 [![Creative Commons](https://img.shields.io/badge/license-CC0%201.0-white.svg?style=flat)](http://creativecommons.org/publicdomain/zero/1.0/)
-[![](https://img.shields.io/badge/made%20with-MAIN%20TECH-blue)](#)
+[![](https://img.shields.io/badge/made%20with-TYPESCRIPT-blue)](#)
 
 
 ---
