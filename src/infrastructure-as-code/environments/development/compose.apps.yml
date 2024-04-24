@@ -6,7 +6,6 @@ services:
   # APPLICATIONS
   #
   app:
-    # hostname: app
     stdin_open: true
     build:
       context: ./../../../projects/app
@@ -30,7 +29,6 @@ services:
       - repohub_net
 
   api:
-    # hostname: api
     build:
       context: ./../../../projects/api
       dockerfile: Dockerfile.dev
