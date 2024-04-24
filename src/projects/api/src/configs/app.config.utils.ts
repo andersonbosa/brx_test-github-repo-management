@@ -1,3 +1,4 @@
+import { hostname } from 'node:os'
 import { CommonConnObject, MariadbConfig, RabbitMQConfig } from '../@types/app.config'
 import { AppConfig } from './app.config'
 
@@ -81,10 +82,10 @@ export function generateLogFileName (
       return `${year}_${month}_${day}--${hours}_${minutes}_${seconds}.log`
     }
 
-    return `${year}_${month}_${day}.log`
+    return `${year}_${month}_${day}`
   }
 
-  return formatDateToFile(new Date())
+  return `${formatDateToFile(new Date())}.${hostname()}.log`
 }
 
 export function parseConnectionUrl (url: string): CommonConnObject {
