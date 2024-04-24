@@ -4,12 +4,29 @@ import helmet from 'helmet'
 
 import http from 'node:http'
 
+import morgan from 'morgan'
+import { pinoHttp } from 'pino-http'
+import { logger } from '../../../adapters/services/logger.service'
 import { AppConfigType } from '../../../configs/app.config'
 import RequestID from './middlewares/rid.middleware'
 import router from './routes/router'
-import { pinoHttp } from 'pino-http'
-import { logger } from '../../../adapters/services/logger.service'
-import morgan from 'morgan'
+import promBundle from "express-prom-bundle"
+
+
+// Add the options to the prometheus middleware most option are for http_request_duration_seconds histogram metric
+const metricsMiddleware = promBundle({
+  includeMethod: true,
+  includePath: true,
+  includeStatusCode: true,
+  includeUp: true,
+  
+  customLabels: { project_name: '@brx/api', project_type: 'test_metrics_labels' },
+  promClient: {
+    collectDefaultMetrics: {
+
+    }
+  }
+})
 
 
 function CreateExpressApp (cfg: AppConfigType): express.Application {
@@ -21,6 +38,7 @@ function CreateExpressApp (cfg: AppConfigType): express.Application {
   app.use(helmet())
   app.use(cors(cfg.security.cors))
   app.use(RequestID())
+  app.use(metricsMiddleware)
 
   app.use(router)
 
