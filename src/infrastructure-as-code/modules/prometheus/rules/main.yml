@@ -1,0 +1,57 @@
+groups:
+- name: InfraRules
+  rules:
+  - alert: RabbitMQHighConnectionErrors
+    expr: |
+      sum(rate(rabbitmq_connections_total{job="rabbitmq"}[5m])) by (instance)
+      - sum(rate(rabbitmq_connections_closed_total{job="rabbitmq"}[5m])) by (instance)
+      / 
+      sum(rate(rabbitmq_connections_total{job="rabbitmq"}[5m])) by (instance) * 100 > 5
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: RabbitMQ high connection errors
+      description: '{{ $labels.instance }} has a high connection error rate ({{ $value }}%)'
+
+  - alert: RedisHighMemoryUsage
+    expr: redis_memory_used_bytes{job="redis"} / redis_memory_max_bytes{job="redis"} * 100 > 80
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: Redis high memory usage
+      description: '{{ $labels.instance }} has high memory usage ({{ $value }}%)'
+
+  - alert: MariaDBSlowQueries
+    expr: rate(mysql_slow_queries_total{job="mariadb"}[5m]) > 10
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: MariaDB slow queries
+      description: '{{ $labels.instance }} has high slow queries rate'
+
+- name: AppRules
+  rules:
+  - alert: ExpressJSHighLatency
+    expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job="api-expressjs", le="0.5"}[5m])) by (instance)) > 1
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: ExpressJS high latency
+      description: '{{ $labels.instance }} has high latency ({{ $value }}s)'
+
+  - alert: NextJSHighErrorRate
+    expr: |
+      sum(rate(http_server_errors_total{job="app-nextjs"}[5m])) by (instance)
+      / 
+      sum(rate(http_requests_total{job="app-nextjs"}[5m])) by (instance) * 100 > 5
+    for: 10m
+    labels:
+      severity: critical
+    annotations:
+      summary: NextJS high error rate
+      description: '{{ $labels.instance }} has a high error rate ({{ $value }}%)'
+

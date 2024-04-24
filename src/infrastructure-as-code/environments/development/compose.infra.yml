@@ -1,0 +1,110 @@
+include:
+  - path: ./compose.base.yml
+
+services:
+  #
+  # INFRASTRUCTURE
+  #
+
+  prometheus-io:
+    image: bitnami/prometheus:latest
+    volumes:
+      - ./../../modules/prometheus/:/etc/prometheus/
+    ports:
+      - "9090:9090"
+    command:
+      - '--storage.tsdb.path=/prometheus'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    hostname: prometheus-host
+    networks:
+      - repohub_net
+
+  grafana-ui:
+    image: bitnami/grafana
+    ports:
+      - 9091:9091
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: false
+      # GF_LOG_LEVEL: debug
+    volumes:
+      - ./../../modules/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./../../modules/grafana/provisioning:/etc/grafana/provisioning
+      # - ./../../modules/grafana/data:/var/lib/grafana
+    hostname: grafana-host
+    networks:
+      - repohub_net
+
+  rabbitmq:
+    image: bitnami/rabbitmq:latest
+    environment:
+      - RABBITMQ_USERNAME=admin
+      - RABBITMQ_PASSWORD=admin
+      - RABBITMQ_VHOST=/
+      - RABBITMQ_PLUGINS=rabbitmq_management,rabbitmq_prometheus
+      - RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS=true
+    # volumes:
+    #   - /path/to/rabbitmq-persistence:/bitnami/rabbitmq/mnesia
+    ports:
+      - 5672:5672
+      - 15672:15672
+      - 15692:15692
+    hostname: rabbitmq-host
+    networks:
+      - repohub_net
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      - REDIS_PASSWORD=admin
+    ports:
+      - "6379:6379"
+    # volumes:
+    #   - redis_data:/data
+    hostname: redis-host
+    networks:
+      - repohub_net
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+
+  redis-exporter:
+    image: oliver006/redis_exporter
+    ports:
+      - 9121:9121
+    restart: unless-stopped
+    environment:
+      REDIS_ADDR: "redis-host:6379"
+      REDIS_USER: null
+      REDIS_PASSWORD: admin
+    hostname: redis-exporter-host
+    networks:
+      - repohub_net
+
+  mariadb:
+    image: bitnami/mariadb:latest
+    environment:
+      - MARIADB_DATABASE=local_mariadb
+      - MARIADB_ROOT_USER=admin
+      - MARIADB_ROOT_PASSWORD=admin
+      - MARIADB_USER=guest
+      - MARIADB_PASSWORD=guest
+      # - ALLOW_EMPTY_PASSWORD=yes # TL;DR quick setup to development env
+    volumes:
+      - ./../../modules/mariadb/my.cnf:/etc/my.cnf
+      - ./../../modules/mariadb/scripts:/docker-entrypoint-initdb.d
+    #   - /path/to/mariadb-persistence:/bitnami/mariadb
+    ports:
+      - "3306:3306"
+    # hostname: mariadb
+    networks:
+      - repohub_net
+    deploy:
+      resources:
+        limits:
+          memory: 500M

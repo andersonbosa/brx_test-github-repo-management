@@ -1,0 +1,64 @@
+global:
+  # By default, scrape targets every 15 seconds.
+  scrape_interval: 15s
+  # Evaluate rules every 15 seconds.
+  evaluation_interval: 15s
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: "prometheus-stack-monitor"
+
+rule_files:
+  - "/etc/prometheus/rules/main.yml"
+  - "/etc/prometheus/rules/redis.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+scrape_configs:
+  - job_name: "prometheus"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["localhost:9090"]
+        labels:
+          group: "infra"
+
+  - job_name: 'grafana_metrics'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['grafana-host:9091']
+        labels:
+          group: "infra"
+
+  - job_name: 'redis_exporter'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['redis-exporter-host:9121']
+        labels:
+          group: "infra"
+
+  - job_name: "rabbitmq"
+    scrape_interval: 5s
+    basic_auth:
+      username: admin
+      password: admin
+    static_configs:
+      - targets: ["rabbitmq-host:15692"]
+        labels:
+          group: "infra"
+
+  - job_name: "api-expressjs"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["api-host:3000"]
+        labels:
+          group: "application"
+
+  - job_name: "app-nextjs"
+    scrape_interval: 5s
+    follow_redirects: true
+    enable_http2: true
+    static_configs:
+      - targets: ["app-host:8080"]
+        labels:
+          group: "application"
