@@ -47,18 +47,18 @@ scrape_configs:
         labels:
           group: "infra"
 
-  - job_name: "api-expressjs"
-    scrape_interval: 5s
-    static_configs:
-      - targets: ["api-host:3000"]
-        labels:
-          group: "application"
+  # - job_name: "api-expressjs"
+  #   scrape_interval: 5s
+  #   static_configs:
+  #     - targets: ["api-host:3000"]
+  #       labels:
+  #         group: "application"
 
-  - job_name: "app-nextjs"
-    scrape_interval: 5s
-    follow_redirects: true
-    enable_http2: true
-    static_configs:
-      - targets: ["app-host:8080"]
-        labels:
-          group: "application"
+  # - job_name: "app-nextjs"
+  #   scrape_interval: 5s
+  #   follow_redirects: true
+  #   enable_http2: true
+  #   static_configs:
+  #     - targets: ["app-host:8080"]
+  #       labels:
+  #         group: "application"

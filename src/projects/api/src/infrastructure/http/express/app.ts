@@ -19,11 +19,9 @@ const metricsMiddleware = promBundle({
   includePath: true,
   includeStatusCode: true,
   includeUp: true,
-  
-  customLabels: { project_name: '@brx/api', project_type: 'test_metrics_labels' },
+  customLabels: { project_name: '@repohub/api', project_type: 'test_metrics_labels' },
   promClient: {
     collectDefaultMetrics: {
-
     }
   }
 })

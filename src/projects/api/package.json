@@ -1,5 +1,5 @@
 {
-  "name": "@brx/api",
+  "name": "@repohub/api",
   "version": "1.0.0",
   "author": "Anderson do Nascimento Bosa",
   "license": "CC0-1.0",
@@ -7,8 +7,8 @@
     "docker:kill": "docker kill demo_api",
     "docker:shell": "docker exec -t demo_api bash ",
     "docker:logs": "docker logs --details -f demo_api ",
-    "docker:build": "docker build -t brx/api:unstable . ",
-    "docker:run": "docker run --rm -- brx/api:unstable ",
+    "docker:build": "docker build -t repohub/api:unstable . ",
+    "docker:run": "docker run --rm -- repohub/api:unstable ",
     "start:http": "node dist/src/infrastructure/http/runner.js ",
     "start:worker": "node dist/src/infrastructure/worker/runner.js ",
     "start": "node dist/src/index.js ",
@@ -88,7 +88,8 @@
     "swagger-ui-express": "^5.0.0",
     "uuid": "^9.0.1",
     "ws": "^8.16.0",
-    "yamljs": "^0.3.0"
+    "yamljs": "^0.3.0",
+    "zod": "^3.23.5"
   },
   "engines": {
     "node": ">=20.x"

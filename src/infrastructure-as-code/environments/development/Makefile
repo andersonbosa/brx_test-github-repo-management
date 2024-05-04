@@ -9,6 +9,9 @@ up:
 up-infra:
 	docker compose -f  compose.infra.yml up --build --force-recreate --remove-orphans --watch
 
+up-apps:
+	docker compose -f  compose.apps.yml up --build --force-recreate --remove-orphans --watch
+
 down:
 	docker compose down
 	docker compose rm --volumes --force

@@ -77,7 +77,7 @@ export function showNotification (
 export function toasty (msg: string, type: TypeOptions | undefined = 'info'): void {
   toast(msg, {
     pauseOnFocusLoss: false,
-    autoClose: 1000,
+    autoClose: 2000,
     position: 'bottom-right',
     type
   })
@@ -142,4 +142,12 @@ export function downloadContentAsFile (
 
   link.click()
   window.URL.revokeObjectURL(url)
+}
+
+
+export function incrementSessionOrders (key: string, newOrder: any) {
+  const rawSessionOrders = localStorage.getItem(key)
+  const sessionOrders = JSON.parse(rawSessionOrders ?? '{}')
+  sessionOrders[newOrder.id] = newOrder
+  localStorage.setItem(key, JSON.stringify(sessionOrders))
 }

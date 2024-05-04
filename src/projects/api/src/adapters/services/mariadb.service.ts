@@ -1,5 +1,7 @@
 import mariadb, { QueryOptions } from 'mariadb'
 import { IDatabaseService } from '../../ports/services.ports'
+import { logger } from './logger.service'
+import { DatabaseConnectionError } from '../../core/errors'
 
 
 export class MariaDBService implements IDatabaseService {
@@ -10,9 +12,13 @@ export class MariaDBService implements IDatabaseService {
       this.conn = await mariadb.createConnection(this.config)
       const result = await this.conn.query(sql, values)
       return result
-    } catch (err) {
+    } catch (err: any) {
       await this.conn?.rollback()
-      throw new Error(`[MariaDBService] Error executing query: ${err}`)
+      if (err.code === 'ECONNREFUSED') {
+        throw new DatabaseConnectionError(err)
+      }
+      console.error(`[${__filename}:MariaDBService]: `, err)
+      throw err
     }
     finally {
       if (this.conn) {

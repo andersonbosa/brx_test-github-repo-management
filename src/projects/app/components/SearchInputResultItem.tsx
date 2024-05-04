@@ -19,7 +19,7 @@ export const SearchInputResultItem: React.FC<SearchInputResultItemProps> = ({ it
   const handleSuggestionClick = async (item: GithubUserItem) => {
     setShowSearchSuggestions(false)
     setSelectedUser(item)
-    toasty(`User "${item.username} selected..."`, 'success')
+    // toasty(`User "${item.username} selected..."`, 'success')
     emitter.emit(EVENT_TYPES.TRIGGER.GITHUB_REPOSITORY_SEARCH, item.username)
   }
 

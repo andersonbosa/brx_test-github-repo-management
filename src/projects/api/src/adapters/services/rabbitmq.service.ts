@@ -52,6 +52,7 @@ export class RabbitMQService implements IRabbitQueueService {
 
 export class RabbitMQServiceV2 {
   private connection: amqpCallback.Connection | null = null
+  
   constructor(private readonly connectionString: string) { }
 
   static async getChannel (connectionString: string) {

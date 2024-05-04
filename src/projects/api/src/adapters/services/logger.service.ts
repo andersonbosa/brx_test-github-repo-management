@@ -16,7 +16,7 @@ const pinoTranports = pino.transport({
       target: 'pino/file',
       options: {
         destination: createFileDir(AppConfig.logging.fileName),
-        // append: false,
+        // append: false, // overwrite the file
       }
     },
     {
@@ -33,7 +33,7 @@ const pinoTranports = pino.transport({
 
 export const logger = pino(
   {
-    name: '@brx/api',
+    name: '@repohub/api',
     level: AppConfig.logging.level,
   },
   pinoTranports

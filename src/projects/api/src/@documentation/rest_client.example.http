@@ -1,3 +1,7 @@
+###
+# Authentication
+#
+
 ### 200
 GET http://localhost:3000/api/v1/healthcheck
 
@@ -26,3 +30,38 @@ Authorization: Bearer <valid jwt>
 ###
 POST http://localhost:3000/api/v1/auth/sign-out
 Authorization: Bearer <invalid jwt>
+
+###
+# Search
+#
+GET http://localhost:3000/api/v1/search/user?username=andersonbosa
+
+###
+GET http://localhost:3000/api/v1/search/repos?username=andersonbosa
+
+###
+# Orders
+#
+POST http://localhost:3000/api/v1/orders
+Content-Type: application/json
+
+{
+  "type": "import",
+  "data": [ { "title": "clean-code-developer-checklist", "description": "A developer checklist derived from the book Clean Code by Robert C Martin ", "owner": "andersonbosa", "stars": 5 }, { "title": "moshell.sh", "description": "Make your customizations and take them everywhere. moshell.sh is a framework to persist its customizations without complexity!", "owner": "andersonbosa", "stars": 5 }, { "title": "security-goat", "description": "Security-Goat is a command line client to perform Security Gate written in Go. It interacts with DependaBot alerts using GitHub GraphQL API.", "owner": "andersonbosa", "stars": 4 } ]
+}
+
+###
+GET http://localhost:3000/api/v1/orders/5
+
+
+###
+PUT http://localhost:3000/api/v1/orders/9
+Content-Type: application/json
+
+{
+  "type": "import",
+  "data": [ { "title": "clean-code-developer-checklist", "description": "A developer checklist derived from the book Clean Code by Robert C Martin ", "owner": "andersonbosa", "stars": 5 }, { "title": "moshell.sh", "description": "Make your customizations and take them everywhere. moshell.sh is a framework to persist its customizations without complexity!", "owner": "andersonbosa", "stars": 5 }, { "title": "security-goat", "description": "Security-Goat is a command line client to perform Security Gate written in Go. It interacts with DependaBot alerts using GitHub GraphQL API.", "owner": "andersonbosa", "stars": 4 } ]
+}
+
+###
+DELETE http://localhost:3000/api/v1/orders/12
