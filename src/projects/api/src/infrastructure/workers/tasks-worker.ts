@@ -111,7 +111,7 @@ function processOrderWithWorker (worker: RabbitMQStatelessBroker) {
         throw new Error(`[${__filename}] Not possible update the order ${order.id}. Error on message "${msg?.fields.deliveryTag}" from "${RABBITMQ_IMPORT_QUEUE_NAME}"`)
       }
 
-      delete updatedOrder.data // to decrease cost of the message stored in line
+      delete updatedOrder.data // to decrease cost of the message stored in queue
 
       worker.sendToExchange(
         RABBITMQ_MAIN_EXCHANGE_NAME,
