@@ -32,7 +32,6 @@ function CreateExpressApp (cfg: AppConfigType): express.Application {
 
   app.use(cfg.logging.useMorgan ? morgan('dev') : pinoHttp({ logger }))
   app.use(express.json())
-  // app.use(express.urlencoded({ extended: true }))
   app.use(helmet())
   app.use(cors(cfg.security.cors))
   app.use(RequestID())
