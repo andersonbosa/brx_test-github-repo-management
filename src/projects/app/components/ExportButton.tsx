@@ -1,8 +1,8 @@
 'use client'
 
-import { apiConvertJsonToCsv, apiCreateUserOrder, createUserOrderInput } from '@/app/api/backend-integration'
+import { apiCreateUserOrder, createUserOrderInput } from '@/app/api/backend-integration'
 import { useRootContext } from '@/contexts'
-import { toasty } from '@/utils'
+import { incrementSessionOrders, toasty } from '@/utils'
 import { debounce } from 'lodash'
 
 
@@ -14,26 +14,20 @@ export const ExportButton = (props: ExportButtonProps) => {
     setDisplayedRepositories
   } = useRootContext()
 
+  const handleOrderCreated = ({ order }: { order: any }) => {
+    toasty(`Export order created with ID: ${order.id}.`, 'success')
+    incrementSessionOrders('orders:exported', order)
+  }
+
   async function handleExport (_: React.MouseEvent<HTMLButtonElement>): Promise<void> {
     if (displayedRepositories.length <= 0) {
       toasty('First search and select a user.', 'error')
       return
     }
 
-    /* TODO requisito; implementar processamento background (conversão do formato) passando pela fila */
-    // await apiCreateUserOrder(
-    await apiConvertJsonToCsv(
-      createUserOrderInput({
-        type: 'export',
-        data: displayedRepositories
-      })
-    )
-      .then(
-        (backendResponse: any) => {
-          //console.log('---- handleExport', backendResponse)
-          toasty(`Order for export created.`)
-        }
-      )
+    await apiCreateUserOrder(
+      createUserOrderInput({ type: 'export', data: displayedRepositories })
+    ).then(handleOrderCreated)
   }
 
   return (

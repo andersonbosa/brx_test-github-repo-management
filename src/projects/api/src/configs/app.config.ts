@@ -70,3 +70,4 @@ const AppConfig: AppConfigType = {
 }
 
 export { AppConfig }
+/* TODO melhoria: nome mais explícito. são configurações gerais da aplicação inteira separada por solução */

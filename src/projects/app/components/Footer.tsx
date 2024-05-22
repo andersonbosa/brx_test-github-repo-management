@@ -14,7 +14,7 @@ export const Footer: React.FC = ({ }: FooterProps) => {
         <p className="text-center">
           Project available in{' '}
           <Link
-            href="https://github.com/andersonbosa/brx_test-github-repo-management"
+            href="https://github.com/andersonbosa/repohub-management"
             target="_blank"
             rel="noopener noreferrer"
             className="underline"

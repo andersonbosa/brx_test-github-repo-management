@@ -1,15 +1,14 @@
+import { ZodError } from 'zod'
 import { IndependentRequest, IndependentResponse } from '../../@types'
-import { DependencyContainer } from '../../configs/dependency.config'
+import { ICreateUserOrderInput } from '../../@types/inputs'
+import { AppConfig } from '../../configs/app.config'
 import { httpStatusCodes } from '../../constants'
+import { CreateUserOrderInputSchema, FindByIdUserOrderInputSchema, createZodResponse, } from '../../core/domain/schemas'
 import { CreateUserOrderUseCase } from '../../core/domain/usecases/create-user-order.usecase'
+import { ProduceMessageToExchange, RabbitMQExchangeAdapter } from '../../core/repositories/queue.repository'
 import { UserOrdersRepository } from '../../core/repositories/user-order.repository'
-import { UserOrdersService } from '../../ports/services.ports'
 
 
-export interface ICreateUserOrderInput {
-  type: 'import' | 'export'
-  data: any
-}
 export class UserOrdersController {
   constructor(
     private userOrdersRepo: UserOrdersRepository
@@ -17,60 +16,70 @@ export class UserOrdersController {
 
   async createOrder (iRequest: IndependentRequest): Promise<IndependentResponse> {
     try {
-      const { body } = iRequest
-      if (!body) {
-        return {
-          statusCode: httpStatusCodes.NOT_FOUND,
-          body: { error: 'Missing parameters to ICreateUserOrderInput' }
-        }
-      }
-      const usecase = new CreateUserOrderUseCase(this.userOrdersRepo)
-      const createdOrder = await usecase.execute(body as ICreateUserOrderInput)
-      /* TODO Sent to queue to be processed */
+      const input = CreateUserOrderInputSchema.parse(iRequest.body)
+      const createUserOrder = new CreateUserOrderUseCase(this.userOrdersRepo)
+      const createdOrder = await createUserOrder.execute(input as ICreateUserOrderInput)
+      if (!createdOrder) throw new Error('Can not create the order')
+      delete createdOrder.data
 
-      if (createdOrder) createdOrder.data = 'obfuscated'
+      /* melhoria: injetar dependencia via DependencyContainer */
+      new ProduceMessageToExchange(new RabbitMQExchangeAdapter(AppConfig.rabbitmq.connectionString, 'work.main.exchange', 'topic', { durable: true }))
+        .execute(createdOrder, `task.${createdOrder.type}`)
 
       return {
         statusCode: httpStatusCodes.CREATED,
-        body: { order: createdOrder }
+        body: { order: createdOrder, }
       }
+
     } catch (error) {
-      console.error('[UserOrdersController] Error creating order:', error)
+      const errMessage = 'Error creating order'
+      console.error(`[${__filename}]`, errMessage, error)
+
+      if (error instanceof ZodError) { return createZodResponse(errMessage, error) }
+
       return {
         statusCode: httpStatusCodes.INTERNAL_SERVER_ERROR,
-        body: { error: 'Error creating order' }
+        body: { error: `${errMessage}. Our team has already been notified and is working on this incident.` }
       }
     }
   }
 
   async getOrder (iRequest: IndependentRequest): Promise<IndependentResponse> {
     try {
-      const orderId = parseInt(iRequest.params?.id)
-      const order = await this.userOrdersRepo.findById(orderId)
+      const input = FindByIdUserOrderInputSchema.parse(iRequest.params)
+      const order = await this.userOrdersRepo.findById(input.id)
+      /* TODO usecase */
+      
       if (!order) {
         return {
           statusCode: httpStatusCodes.NOT_FOUND,
           body: { error: 'Order not found' }
         }
       }
+
       return {
         statusCode: httpStatusCodes.OK,
         body: { order }
       }
+
     } catch (error) {
-      console.error('[UserOrdersController] Error getting order:', error)
+      const errMessage = 'Error getting order'
+      console.error(`[${__filename}]`, errMessage, error)
+      if (error instanceof ZodError) { return createZodResponse(errMessage, error) }
       return {
         statusCode: httpStatusCodes.INTERNAL_SERVER_ERROR,
-        body: { error: 'Error getting order' }
+        body: { error: `${errMessage}. Our team has already been notified and is working on this incident.` }
       }
     }
   }
 
   async updateOrder (iRequest: IndependentRequest): Promise<IndependentResponse> {
     try {
-      const orderId = parseInt(iRequest.params?.id)
-      const { type, data } = iRequest.body || {}
-      const updatedOrder = await this.userOrdersRepo.update(orderId, { type, data })
+      const { id } = FindByIdUserOrderInputSchema.parse(iRequest.params)
+      const orderBody = CreateUserOrderInputSchema.parse(iRequest.body)
+      const updatedOrder = await this.userOrdersRepo.update(id, orderBody)
+      /* TODO usecase */
+
       if (!updatedOrder) {
         return {
           statusCode: httpStatusCodes.NOT_FOUND,
@@ -79,13 +88,17 @@ export class UserOrdersController {
       }
       return {
         statusCode: httpStatusCodes.OK,
-        body: { order: updatedOrder }
+        body: {
+          order: updatedOrder
+        }
       }
     } catch (error) {
-      console.error('[UserOrdersController] Error updating order:', error)
+      const errMessage = 'Error updating order'
+      console.error(`[${__filename}]`, errMessage, error)
+      if (error instanceof ZodError) { return createZodResponse(errMessage, error) }
       return {
         statusCode: httpStatusCodes.INTERNAL_SERVER_ERROR,
-        body: { error: 'Error updating order' }
+        body: { error: `${errMessage}. Our team has already been notified and is working on this incident.` }
       }
     }
   }
@@ -94,6 +107,7 @@ export class UserOrdersController {
     try {
       const orderId = parseInt(iRequest.params?.id)
       const deletedOrder = await this.userOrdersRepo.delete(orderId)
+      /* TODO usecase */
       if (!deletedOrder) {
         return {
           statusCode: httpStatusCodes.NOT_FOUND,
@@ -105,10 +119,12 @@ export class UserOrdersController {
         body: { message: 'Order deleted successfully' }
       }
     } catch (error) {
-      console.error('[UserOrdersController] Error deleting order:', error)
+      const errMessage = 'Error deleting order'
+      console.error(`[${__filename}]`, errMessage, error)
+      if (error instanceof ZodError) { return createZodResponse(errMessage, error) }
       return {
         statusCode: httpStatusCodes.INTERNAL_SERVER_ERROR,
-        body: { error: 'Error deleting order' }
+        body: { error: `${errMessage}. Our team has already been notified and is working on this incident.` }
       }
     }
   }

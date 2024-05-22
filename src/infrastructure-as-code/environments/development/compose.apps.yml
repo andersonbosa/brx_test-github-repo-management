@@ -1,0 +1,58 @@
+include:
+  - path: ./compose.base.yml
+
+services:
+  #
+  # APPLICATIONS
+  #
+  app:
+    stdin_open: true
+    build:
+      context: ./../../../projects/app
+      dockerfile: Dockerfile.dev
+      args:
+        PORT: 8080
+    volumes:
+      - ./../../../projects/app:/home/node/app
+      - /home/node/app/node_modules
+      - /home/node/app/.next
+    ports:
+      - "8080:8080"
+    hostname: app-host
+    networks:
+      - repohub_net
+    env_file:
+      - ./.env
+      # - ./../../../projects/app/.env.local
+    # environment:
+    #   NODE_ENV: development
+    #   NEXT_PUBLIC_BACKEND_API_BASE_URL: http://0.0.0.0:3000
+    #   NEXT_PUBLIC_NEXT_API_BASE_URL: http://0.0.0.0:8080
+
+  api:
+    build:
+      context: ./../../../projects/api
+      dockerfile: Dockerfile.dev
+      args:
+        PORT: 3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./../../../projects/api:/home/node/app
+      - /home/node/api/node_modules
+      - /home/node/api/logs
+    hostname: api-host
+    networks:
+      - repohub_net
+    env_file:
+      - ./.env
+      # - ./../../../projects/api/.env
+    # environment:
+    #   NODE_ENV: development
+    #   PORT: 3000
+    #   LOGGING_LEVEL: debug
+    #   LOGGING_USE_MORGAN: true
+    #   MARIADB_CONNECTION_URL: mysql://admin:admin@mariadb-host:3306/local_mariadb
+    #   REDIS_CONNECTION_URL: redis://default:admin@redis-host:6379/1
+    #   RABBITMQ_CONNECTION_URL: amqp://admin:admin@rabbitmq-host:5672
+    #   NEXTJS_APP_ORIGIN: http://app-host:8080

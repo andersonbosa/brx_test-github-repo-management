@@ -13,6 +13,7 @@
     "http-status-codes": "^2.3.0",
     "lodash": "^4.17.21",
     "next": "14.2.1",
+    "prom-client": "^15.1.2",
     "react": "^18",
     "react-dom": "^18",
     "react-toastify": "^10.0.5",

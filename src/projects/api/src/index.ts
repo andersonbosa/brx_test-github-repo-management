@@ -1,2 +1,3 @@
-import './infrastructure/http/runner'
-// import './src/infrastructure/worker/runner'
+// import './infrastructure/workers/runner'
+// import './infrastructure/http/runner'
+import './infrastructure/runner'

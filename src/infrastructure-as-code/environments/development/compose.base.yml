@@ -1,0 +1,7 @@
+
+networks:
+  repohub_net:
+    ipam:
+      config:
+        - subnet: 10.6.0.0/16
+          gateway: 10.6.0.1

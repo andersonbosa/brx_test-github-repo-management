@@ -27,7 +27,7 @@ export function createUserOrderInput ({ type, data }: ICreateUserOrderInput): IC
 }
 
 export async function apiCreateUserOrder (payload: ICreateUserOrderInput) {
-  const nextURL = createNextAPIUrl('/api/data/task')
+  const nextURL = createBackendAPIUrl('/api/v1/orders')
   const response = await axios.post(nextURL, payload)
   return response.data ?? {}
 }

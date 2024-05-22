@@ -5,7 +5,8 @@ import { AppConfig } from '../../configs/app.config'
 
 function createFileDir (fileName: string): string {
   const logsDir = join(__dirname, '..', '..', '..', 'logs')
-  return join(logsDir, fileName)
+  const filePath = join(logsDir, fileName)
+  return filePath
 }
 
 const pinoTranports = pino.transport({
@@ -15,7 +16,7 @@ const pinoTranports = pino.transport({
       target: 'pino/file',
       options: {
         destination: createFileDir(AppConfig.logging.fileName),
-        // append: false,
+        // append: false, // overwrite the file
       }
     },
     {
@@ -32,7 +33,7 @@ const pinoTranports = pino.transport({
 
 export const logger = pino(
   {
-    name: '@brx/api',
+    name: '@repohub/api',
     level: AppConfig.logging.level,
   },
   pinoTranports

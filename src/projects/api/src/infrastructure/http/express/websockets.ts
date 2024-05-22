@@ -1,6 +1,6 @@
 import express from 'express'
 import http, { createServer } from 'node:http'
-import { Server as IoServer, Socket } from 'socket.io'
+import { Server as SocketIOServer, Socket } from 'socket.io'
 import { WebSocket, WebSocketServer as WsServer } from 'ws'
 import { AppConfigType } from './../../../configs/app.config'
 
@@ -9,7 +9,7 @@ export function createSocketIOServerFromExpress (app: express.Application, confi
   const http = createServer(app)
 
   // Add this to where your other requires are
-  const sio = new IoServer(http, {
+  const sio = new SocketIOServer(http, {
     cors: config.security.cors
   })
   // Above our `app.get("/users")` handler
@@ -31,8 +31,14 @@ export function createSocketIOServerFromExpress (app: express.Application, confi
 
 export function createSocketIOServer (http: http.Server, config: AppConfigType) {
   // Add this to where your other requires are
-  const sio = new IoServer(http, {
-    cors: config.security.cors
+  const sio = new SocketIOServer(http, {
+    cors: config.security.cors,
+    connectionStateRecovery: {
+      // the backup duration of the sessions and the packets
+      maxDisconnectionDuration: 2 * 60 * 1000,
+      // whether to skip middlewares upon successful recovery
+      skipMiddlewares: true,
+    }
   })
   // Above our `app.get("/users")` handler
   sio.on("connection", (socket: Socket) => {

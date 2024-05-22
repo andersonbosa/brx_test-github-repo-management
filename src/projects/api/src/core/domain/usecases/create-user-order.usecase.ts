@@ -1,4 +1,4 @@
-import { ICreateUserOrderInput } from '../../../adapters/controllers/user-orders.controller'
+import { ICreateUserOrderInput } from '../../../@types/inputs'
 import { UserOrdersRepository } from '../../repositories/user-order.repository'
 import { UserOrderEntity } from '../entities/user-order.entity'
 

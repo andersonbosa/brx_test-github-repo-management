@@ -1,4 +1,3 @@
-import { UserEntity } from '../core/domain/entities/user.entity'
 import { IUserSession, IUserSessionAddSessionInput } from './services.ports'
 
 export interface ICounterRepository {
