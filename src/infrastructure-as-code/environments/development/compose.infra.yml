@@ -6,6 +6,61 @@ services:
   # INFRASTRUCTURE
   #
 
+
+  mariadb:
+    image: bitnami/mariadb:latest
+    ports:
+      - "3306:3306"
+    hostname: mariadb-host
+    networks:
+      - repohub_net
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+    volumes:
+      - ./../../modules/mariadb/my.cnf:/etc/my.cnf
+      - ./../../modules/mariadb/scripts:/docker-entrypoint-initdb.d
+    #   - /path/to/mariadb-persistence:/bitnami/mariadb
+    env_file:
+      - ./.env
+      # environment:
+      #   - MARIADB_DATABASE=local_mariadb
+      #   - MARIADB_ROOT_USER=admin
+      #   - MARIADB_ROOT_PASSWORD=admin
+      #   - MARIADB_USER=guest
+      #   - MARIADB_PASSWORD=guest
+      # - ALLOW_EMPTY_PASSWORD=yes # TL;DR quick setup to development env
+
+      # redis:
+      #   image: bitnami/redis:latest
+      #   environment:
+      #     - REDIS_PASSWORD=admin
+      #   ports:
+      #     - "6379:6379"
+      #   # volumes:
+      #   #   - redis_data:/data
+      #   hostname: redis-host
+      #   networks:
+      #     - repohub_net
+      #   deploy:
+      #     resources:
+      #       limits:
+      #         memory: 500M
+
+      # redis-exporter:
+      #   image: oliver006/redis_exporter
+      #   ports:
+      #     - 9121:9121
+      #   restart: unless-stopped
+      #   environment:
+      #     REDIS_ADDR: "redis-host:6379"
+      #     REDIS_USER: null
+      #     REDIS_PASSWORD: admin
+      #   hostname: redis-exporter-host
+      #   networks:
+      #     - repohub_net
+
   prometheus-io:
     image: bitnami/prometheus:latest
     volumes:
@@ -64,57 +119,3 @@ services:
     #   - RABBITMQ_PLUGINS=rabbitmq_management,rabbitmq_prometheus
     #   - RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS=true
     #   - RABBITMQ_CONFIG_FILES=/opt/bitnami/rabbitmq/var/lib/rabbitmq/conf.d
-
-      # redis:
-      #   image: bitnami/redis:latest
-      #   environment:
-      #     - REDIS_PASSWORD=admin
-      #   ports:
-      #     - "6379:6379"
-      #   # volumes:
-      #   #   - redis_data:/data
-      #   hostname: redis-host
-      #   networks:
-      #     - repohub_net
-      #   deploy:
-      #     resources:
-      #       limits:
-      #         memory: 500M
-
-      # redis-exporter:
-      #   image: oliver006/redis_exporter
-      #   ports:
-      #     - 9121:9121
-      #   restart: unless-stopped
-      #   environment:
-      #     REDIS_ADDR: "redis-host:6379"
-      #     REDIS_USER: null
-      #     REDIS_PASSWORD: admin
-      #   hostname: redis-exporter-host
-      #   networks:
-      #     - repohub_net
-
-  mariadb:
-    image: bitnami/mariadb:latest
-    ports:
-      - "3306:3306"
-    hostname: mariadb-host
-    networks:
-      - repohub_net
-    deploy:
-      resources:
-        limits:
-          memory: 500M
-    volumes:
-      - ./../../modules/mariadb/my.cnf:/etc/my.cnf
-      - ./../../modules/mariadb/scripts:/docker-entrypoint-initdb.d
-    #   - /path/to/mariadb-persistence:/bitnami/mariadb
-    env_file:
-      - ./.env
-    # environment:
-    #   - MARIADB_DATABASE=local_mariadb
-    #   - MARIADB_ROOT_USER=admin
-    #   - MARIADB_ROOT_PASSWORD=admin
-    #   - MARIADB_USER=guest
-    #   - MARIADB_PASSWORD=guest
-    # - ALLOW_EMPTY_PASSWORD=yes # TL;DR quick setup to development env
